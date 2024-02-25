@@ -9,9 +9,30 @@ import {
 } from "@nextui-org/react";
 import { auth } from "@/app/auth";
 import Link from "next/link";
+import React from "react";
 
 const Header = async () => {
   const session = await auth();
+
+  let authContent: React.ReactNode;
+  if (session?.user) {
+    authContent = <Avatar src={session?.user.image || ''} />
+  } else {
+    authContent = (
+      <>
+        <NavbarItem>
+          <Button type="submit" color="secondary" variant="bordered">
+            Sign In
+          </Button>
+        </NavbarItem>
+        <NavbarItem>
+          <Button type="submit" color="primary" variant="flat">
+            Sign Up
+          </Button>
+        </NavbarItem>
+      </>
+    );
+  }
 
   return (
     <Navbar className="shadow mb-6">
@@ -26,9 +47,9 @@ const Header = async () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
-          {session?.user ? <div>Signed In</div> : <div>Signed Out</div>}
-        </NavbarItem>
+      
+          {authContent}
+        
       </NavbarContent>
     </Navbar>
   );
